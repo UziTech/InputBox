@@ -29,21 +29,25 @@ public enum InputBoxResult
 public struct InputBoxItem
 {
     public string Label;
-    public string Text = "";
-    public bool IsPassword = false;
+    public string Text;
+    public bool IsPassword;
 
     public InputBoxItem(string label)
     {
         Label = label;
+        Text = "";
+        IsPassword = false;
     }
     public InputBoxItem(string label, string text)
     {
         Label = label;
         Text = text;
+        IsPassword = false;
     }
     public InputBoxItem(string label, bool isPassword)
     {
         Label = label;
+        Text = "";
         IsPassword = isPassword;
     }
     public InputBoxItem(string label, string text, bool isPassword)
