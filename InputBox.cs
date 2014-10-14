@@ -26,6 +26,39 @@ public enum InputBoxResult
     Save
 }
 
+public struct InputBoxItem
+{
+    public string Label;
+    public string Text = "";
+    public bool IsPassword = false;
+
+    public InputBoxItem(string label)
+    {
+        Label = label;
+    }
+    public InputBoxItem(string label, string text)
+    {
+        Label = label;
+        Text = text;
+    }
+    public InputBoxItem(string label, bool isPassword)
+    {
+        Label = label;
+        IsPassword = isPassword;
+    }
+    public InputBoxItem(string label, string text, bool isPassword)
+    {
+        Label = label;
+        Text = text;
+        IsPassword = isPassword;
+    }
+}
+
+//public struct InputBoxOptions
+//{
+//    public bool ShowCloseButton = true;
+//}
+
 public class InputBox
 {
     private Dictionary<string, string> values;
@@ -36,19 +69,10 @@ public class InputBox
 
     }
 
-    public static InputBox Show(string title)
+    public static InputBox Show(string title, string label)
     {
         InputBox inputDialog = new InputBox();
-        dialogForm dialog = new dialogForm(title, new string[] { "" }, new string[] { "" }, InputBoxButtons.OK);
-        dialog.ShowDialog();
-        inputDialog.result = dialog.InputResult;
-        return inputDialog;
-    }
-
-    public static InputBox Show(string title, string message)
-    {
-        InputBox inputDialog = new InputBox();
-        dialogForm dialog = new dialogForm(title, new string[] { message }, new string[] { "" }, InputBoxButtons.OK);
+        dialogForm dialog = new dialogForm(title, new InputBoxItem[] { new InputBoxItem(label) }, InputBoxButtons.OK);
         dialog.ShowDialog();
         inputDialog.result = dialog.InputResult;
         inputDialog.values = new Dictionary<string, string>(1);
@@ -56,10 +80,10 @@ public class InputBox
         return inputDialog;
     }
 
-    public static InputBox Show(string title, string message, InputBoxButtons buttons)
+    public static InputBox Show(string title, string label, InputBoxButtons buttons)
     {
         InputBox inputDialog = new InputBox();
-        dialogForm dialog = new dialogForm(title, new string[] { message }, new string[] { "" }, buttons);
+        dialogForm dialog = new dialogForm(title, new InputBoxItem[] { new InputBoxItem(label) }, buttons);
         dialog.ShowDialog();
         inputDialog.result = dialog.InputResult;
         inputDialog.values = new Dictionary<string, string>(1);
@@ -67,10 +91,10 @@ public class InputBox
         return inputDialog;
     }
 
-    public static InputBox Show(string title, string message, string defaultText)
+    public static InputBox Show(string title, string label, string text)
     {
         InputBox inputDialog = new InputBox();
-        dialogForm dialog = new dialogForm(title, new string[] { message }, new string[] { defaultText }, InputBoxButtons.OK);
+        dialogForm dialog = new dialogForm(title, new InputBoxItem[] { new InputBoxItem(label, text) }, InputBoxButtons.OK);
         dialog.ShowDialog();
         inputDialog.result = dialog.InputResult;
         inputDialog.values = new Dictionary<string, string>(1);
@@ -78,10 +102,10 @@ public class InputBox
         return inputDialog;
     }
 
-    public static InputBox Show(string title, string message, string defaultText, InputBoxButtons buttons)
+    public static InputBox Show(string title, string label, string text, InputBoxButtons buttons)
     {
         InputBox inputDialog = new InputBox();
-        dialogForm dialog = new dialogForm(title, new string[] { message }, new string[] { defaultText }, buttons);
+        dialogForm dialog = new dialogForm(title, new InputBoxItem[] { new InputBoxItem(label, text) }, buttons);
         dialog.ShowDialog();
         inputDialog.result = dialog.InputResult;
         inputDialog.values = new Dictionary<string, string>(1);
@@ -89,10 +113,16 @@ public class InputBox
         return inputDialog;
     }
 
-    public static InputBox Show(string title, string[] messages)
+    public static InputBox Show(string title, string[] labels)
     {
+        InputBoxItem[] items = new InputBoxItem[labels.Length];
+        for (int i = 0; i < labels.Length; i++)
+        {
+            items[i] = new InputBoxItem(labels[i]);
+        }
+
         InputBox inputDialog = new InputBox();
-        dialogForm dialog = new dialogForm(title, messages, new string[messages.Length], InputBoxButtons.OK);
+        dialogForm dialog = new dialogForm(title, items, InputBoxButtons.OK);
         dialog.ShowDialog();
         inputDialog.result = dialog.InputResult;
         inputDialog.values = new Dictionary<string, string>(dialog.label.Length);
@@ -103,10 +133,16 @@ public class InputBox
         return inputDialog;
     }
 
-    public static InputBox Show(string title, string[] messages, InputBoxButtons buttons)
+    public static InputBox Show(string title, string[] labels, InputBoxButtons buttons)
     {
+        InputBoxItem[] items = new InputBoxItem[labels.Length];
+        for (int i = 0; i < labels.Length; i++)
+        {
+            items[i] = new InputBoxItem(labels[i]);
+        }
+
         InputBox inputDialog = new InputBox();
-        dialogForm dialog = new dialogForm(title, messages, new string[messages.Length], buttons);
+        dialogForm dialog = new dialogForm(title, items, buttons);
         dialog.ShowDialog();
         inputDialog.result = dialog.InputResult;
         inputDialog.values = new Dictionary<string, string>(dialog.label.Length);
@@ -117,10 +153,10 @@ public class InputBox
         return inputDialog;
     }
 
-    public static InputBox Show(string title, string[] messages, string[] defaultTexts)
+    public static InputBox Show(string title, InputBoxItem[] items)
     {
         InputBox inputDialog = new InputBox();
-        dialogForm dialog = new dialogForm(title, messages, defaultTexts, InputBoxButtons.OK);
+        dialogForm dialog = new dialogForm(title, items, InputBoxButtons.OK);
         dialog.ShowDialog();
         inputDialog.result = dialog.InputResult;
         inputDialog.values = new Dictionary<string, string>(dialog.label.Length);
@@ -131,10 +167,10 @@ public class InputBox
         return inputDialog;
     }
 
-    public static InputBox Show(string title, string[] messages, string[] defaultTexts, InputBoxButtons buttons)
+    public static InputBox Show(string title, InputBoxItem[] items, InputBoxButtons buttons)
     {
         InputBox inputDialog = new InputBox();
-        dialogForm dialog = new dialogForm(title, messages, defaultTexts, buttons);
+        dialogForm dialog = new dialogForm(title, items, buttons);
         dialog.ShowDialog();
         inputDialog.result = dialog.InputResult;
         inputDialog.values = new Dictionary<string, string>(dialog.label.Length);
@@ -169,15 +205,15 @@ public class InputBox
             get { return inputResult; }
         }
 
-        public dialogForm(string title, string[] labels, string[] defaultTexts, InputBoxButtons buttons)
+        public dialogForm(string title, InputBoxItem[] items, InputBoxButtons buttons)
         {
             int minWidth = 312;
-            label = new Label[labels.Length];
+            label = new Label[items.Length];
             for (int i = 0; i < label.Length; i++)
             {
                 label[i] = new Label();
             }
-            textBox = new TextBox[defaultTexts.Length];
+            textBox = new TextBox[items.Length];
             for (int i = 0; i < textBox.Length; i++)
             {
                 textBox[i] = new TextBox();
@@ -194,7 +230,7 @@ public class InputBox
                 label[i].AutoSize = true;
                 label[i].Location = new Point(12, 9 + (i * 39));
                 label[i].Name = "label[" + i + "]";
-                label[i].Text = labels[i];
+                label[i].Text = items[i].Label;
                 if (label[i].Width > minWidth)
                 {
                     minWidth = label[i].Width;
@@ -210,8 +246,8 @@ public class InputBox
                 textBox[i].Name = "textBox[" + i + "]";
                 textBox[i].Size = new Size(288, 20);
                 textBox[i].TabIndex = i;
-                textBox[i].Text = defaultTexts[i];
-                if (label[i].Text.ToLower() == "password")
+                textBox[i].Text = items[i].Text;
+                if (items[i].IsPassword)
                 {
                     textBox[i].UseSystemPasswordChar = true;
                 }
@@ -306,7 +342,7 @@ public class InputBox
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(312, 47 + (39 * label.Length));
+            ClientSize = new Size(312, 47 + (39 * items.Length));
             for (int i = 0; i < label.Length; i++)
             {
                 Controls.Add(label[i]);
@@ -320,7 +356,7 @@ public class InputBox
             Controls.Add(button3);
             MaximizeBox = false;
             MinimizeBox = false;
-            MaximumSize = new Size(99999, 85 + (39 * label.Length));
+            MaximumSize = new Size(99999, 85 + (39 * items.Length));
             Name = "dialogForm";
             ShowIcon = false;
             ShowInTaskbar = false;
@@ -334,8 +370,8 @@ public class InputBox
                     minWidth = l.Width;
                 }
             }
-            ClientSize = new Size(minWidth + 24, 47 + (39 * label.Length));
-            MinimumSize = new Size(minWidth + 40, 85 + (39 * label.Length));
+            ClientSize = new Size(minWidth + 24, 47 + (39 * items.Length));
+            MinimumSize = new Size(minWidth + 40, 85 + (39 * items.Length));
         }
 
         private void OK_Click(object sender, EventArgs e)
