@@ -157,6 +157,34 @@ public class InputBox
         return inputDialog;
     }
 
+    public static InputBox Show(string title, InputBoxItem item)
+    {
+        InputBox inputDialog = new InputBox();
+        dialogForm dialog = new dialogForm(title, new InputBoxItem[]{ item }, InputBoxButtons.OK);
+        dialog.ShowDialog();
+        inputDialog.result = dialog.InputResult;
+        inputDialog.values = new Dictionary<string, string>(dialog.label.Length);
+        for (int i = 0; i < dialog.label.Length; i++)
+        {
+            inputDialog.values.Add(dialog.label[i].Text, dialog.textBox[i].Text);
+        }
+        return inputDialog;
+    }
+
+    public static InputBox Show(string title, InputBoxItem item, InputBoxButtons buttons)
+    {
+        InputBox inputDialog = new InputBox();
+        dialogForm dialog = new dialogForm(title, new InputBoxItem[] { item }, buttons);
+        dialog.ShowDialog();
+        inputDialog.result = dialog.InputResult;
+        inputDialog.values = new Dictionary<string, string>(dialog.label.Length);
+        for (int i = 0; i < dialog.label.Length; i++)
+        {
+            inputDialog.values.Add(dialog.label[i].Text, dialog.textBox[i].Text);
+        }
+        return inputDialog;
+    }
+
     public static InputBox Show(string title, InputBoxItem[] items)
     {
         InputBox inputDialog = new InputBox();
