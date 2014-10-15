@@ -68,10 +68,7 @@ public class InputBox
     private Dictionary<string, string> values;
     private InputBoxResult result;
 
-    private InputBox()
-    {
-
-    }
+    private InputBox(){}
 
     public static InputBox Show(string title, string label)
     {
@@ -257,7 +254,7 @@ public class InputBox
             // 
             // label
             // 
-            for (int i = 0; i < label.Length; i++)
+            for (int i = 0; i < items.Length; i++)
             {
                 label[i].AutoSize = true;
                 label[i].Location = new Point(12, 9 + (i * 39));
@@ -271,9 +268,9 @@ public class InputBox
             // 
             // textBox
             // 
-            for (int i = 0; i < textBox.Length; i++)
+            for (int i = 0; i < items.Length; i++)
             {
-                textBox[i].Anchor = ((AnchorStyles)((AnchorStyles.Top | AnchorStyles.Left) | AnchorStyles.Right));
+                textBox[i].Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
                 textBox[i].Location = new Point(12, 25 + (i * 39));
                 textBox[i].Name = "textBox[" + i + "]";
                 textBox[i].Size = new Size(288, 20);
@@ -287,31 +284,31 @@ public class InputBox
             // 
             // button1
             // 
-            button1.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Right)));
+            button1.Anchor = (AnchorStyles)(AnchorStyles.Bottom | AnchorStyles.Right);
             button1.Location = new Point(208, 15 + (39 * label.Length));
             button1.Name = "button1";
             button1.Size = new Size(92, 23);
-            button1.TabIndex = 6;
+            button1.TabIndex = items.Length + 2;
             button1.Text = "button1";
             button1.UseVisualStyleBackColor = true;
             // 
             // button2
             // 
-            button2.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Right)));
+            button2.Anchor = (AnchorStyles)(AnchorStyles.Bottom | AnchorStyles.Right);
             button2.Location = new Point(110, 15 + (39 * label.Length));
             button2.Name = "button2";
             button2.Size = new Size(92, 23);
-            button2.TabIndex = 2;
+            button2.TabIndex = items.Length + 1;
             button2.Text = "button2";
             button2.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
-            button3.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Right)));
+            button3.Anchor = (AnchorStyles)(AnchorStyles.Bottom | AnchorStyles.Right);
             button3.Location = new Point(12, 15 + (39 * label.Length));
             button3.Name = "button3";
             button3.Size = new Size(92, 23);
-            button3.TabIndex = 3;
+            button3.TabIndex = items.Length;
             button3.Text = "button3";
             button3.UseVisualStyleBackColor = true;
             //
