@@ -20,3 +20,4 @@ if (input.Result == InputBoxResult.OK)
     doLogin(input.Values["Username"], input.Values["Password"]);
 }
 ```
+![](http://uzitech.github.io/images/inputbox1.png)
