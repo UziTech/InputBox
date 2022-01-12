@@ -1,9 +1,11 @@
 /*
  * Author: Tony Brix, http://tonybrix.info
  * License: MIT
- */ 
+ */
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -67,6 +69,10 @@ public class InputBox
 {
     private Dictionary<string, string> items;
     private InputBoxResult result;
+    private static NameValueCollection values = new NameValueCollection(); // Values
+
+
+
 
     private InputBox(dialogForm dialog)
     {
@@ -252,6 +258,18 @@ public class InputBox
         get { return result; }
     }
 
+    /*
+     * Create method Values
+     */
+    public NameValueCollection Values
+    {
+        get {
+            return values;
+        }
+    }
+
+    
+
     private class dialogForm : Form
     {
         private InputBoxResult inputResult = InputBoxResult.Cancel;
@@ -264,6 +282,31 @@ public class InputBox
         public InputBoxResult InputResult
         {
             get { return inputResult; }
+        }
+
+        /*
+         * SaveValues
+         * Function to add value in NameValueCollection
+         */
+        private void SaveValues()
+        {
+            /*
+             * Clean Old Values
+             */
+            values.Clear();
+
+            /*
+             * Get all TextBox from Form and 
+             * Add value to Static var values
+             */
+
+            foreach (Control x in this.Controls)
+            {
+                if (x is TextBox box)
+                {
+                    values.Add((string)box.Tag, box.Text);
+                }
+            }
         }
 
         public dialogForm(string title, InputBoxItem[] items, InputBoxButtons buttons)
@@ -302,12 +345,15 @@ public class InputBox
             // 
             for (int i = 0; i < items.Length; i++)
             {
+                //TextBox _v = textBox[i];
+                //teset(_v);
                 textBox[i].Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
                 textBox[i].Location = new Point(12, 25 + (i * 39));
                 textBox[i].Name = "textBox[" + i + "]";
                 textBox[i].Size = new Size(288, 20);
                 textBox[i].TabIndex = i;
                 textBox[i].Text = items[i].Text;
+                textBox[i].Tag = items[i].Label; // Add Tag to reference
                 if (items[i].IsPassword)
                 {
                     textBox[i].UseSystemPasswordChar = true;
@@ -437,6 +483,7 @@ public class InputBox
 
         private void OK_Click(object sender, EventArgs e)
         {
+            SaveValues(); // Set Values
             inputResult = InputBoxResult.OK;
             Close();
         }
