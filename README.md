@@ -17,7 +17,7 @@ InputBoxItem[] items = new InputBoxItem[] {
 InputBox input = InputBox.Show("Login", items, InputBoxButtons.OKCancel);
 if (input.Result == InputBoxResult.OK)
 {
-    doLogin(input.Items["Username"], input.Items["Password"]);
+    doLogin(input.Items["Username"].Text, input.Items["Password"].Text);
 }
 ```
 ![](http://uzitech.github.io/images/inputbox1.png)
